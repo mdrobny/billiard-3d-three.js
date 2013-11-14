@@ -23,7 +23,7 @@ define([
             [4*r,-2*r],[4*r,0],[4*r,2*r]
 
             ];
-            this.positionWhite = [-4*r, 0];
+            this.positionWhite = [-4*r,3];
 
             this._createAndAddBalls();
             return this.models;

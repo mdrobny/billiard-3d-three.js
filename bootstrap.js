@@ -29,10 +29,13 @@ define([
 
     var render = function () {
         renderer.render(scene, camera);
+
         requestAnimationFrame(render);
+
+        TWEEN.update();
     };
 
-//    dr.render = render;
+    dr.render = render;
 
     init();
     render();
