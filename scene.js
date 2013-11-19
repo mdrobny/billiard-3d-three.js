@@ -8,13 +8,14 @@ define([
         scene: null,
 
         init: function() {
-            var scene, table, balls, whiteBall, cue;
+            var scene, table, balls, whiteBall, cue, cueFrame, cuePointConstraint;
 
             scene = new Physijs.Scene();
             scene.setGravity(new THREE.Vector3(0,-10,0));
             scene.addEventListener('update', function() {
                 scene.simulate(undefined, 2);
             });
+            dr.scene = scene;
 
             this._setLights(scene);
 
@@ -23,19 +24,21 @@ define([
             scene.add(table);
 
             balls = Balls.create();
+
+            whiteBall = _.last(balls);
+            cue = Cue.create(whiteBall, Balls);
+
+//            whiteBall.add(cue);
+            scene.add(cue)
+
             _.forEach(balls, function (ball) {
                 scene.add(ball);
                 ball.setDamping(0.4, 0.5);
             });
 
-            whiteBall = _.last(balls);
-            whiteBall.applyCentralImpulse(new THREE.Vector3(375, 0, 0));
             dr.whiteBall = whiteBall;
 
-            cue = Cue.create(whiteBall);
-            scene.add(cue);
             dr.cue = cue;
-
 
 
 
@@ -74,10 +77,10 @@ define([
             light.shadowDarkness = 0.5;
             light.shadowCameraNear = 2;
 //            light.shadowCameraFar = 2;
-            light.shadowCameraLeft = -25;
-            light.shadowCameraRight = 25;
-            light.shadowCameraTop = 25;
-            light.shadowCameraBottom = -25;
+            light.shadowCameraLeft = -30;
+            light.shadowCameraRight = 30;
+            light.shadowCameraTop = 20;
+            light.shadowCameraBottom = -20;
 
 //            light.shadowCameraVisible = true;
             scene.add(light);

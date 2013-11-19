@@ -23,7 +23,7 @@ define([
             [4*r,-2*r],[4*r,0],[4*r,2*r]
 
             ];
-            this.positionWhite = [-4*r,3];
+            this.positionWhite = [-4*r,0];
 
             this._createAndAddBalls();
             return this.models;
@@ -44,6 +44,22 @@ define([
             ball.position.z = this.positionWhite[1];
             this.models.push(ball);
 
+        },
+
+        isMoving: function(obj) {
+            var moving, interval, posXBefore, posZBefore;
+            moving = true;
+            posXBefore = posZBefore = 0;
+            interval = setInterval(function () {
+                if(obj.position.x === posXBefore && obj.position.z === posZBefore) {
+                    moving = false;
+                    clearInterval(interval);
+                    obj.dispatchEvent('stoppedMoving');
+                } else {
+                    posXBefore = obj.position.x;
+                    posZBefore = obj.position.z;
+                }
+            }.bind(this), 500);
         }
 
     };
