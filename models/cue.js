@@ -1,8 +1,9 @@
-/* global define, dr, THREE, Physijs */
+/* global define, dr, THREE, TWEEN, Physijs */
 define(function (){
     var cue = {
         radius: 1,
-        length: 40,
+        smallRadius: 0.4,
+        length: 60,
         distanceFromWhiteBall: 3,
 
         mesh: null,
@@ -14,7 +15,6 @@ define(function (){
         shootPower: 10,
         /** 0 - 360**/
         shootAngle: 0,
-        shootAngleBefore: 0,
 
         ballsObj: null,
 
@@ -32,12 +32,14 @@ define(function (){
         },
 
         _createCue: function() {
-            var geometry, material, mesh;
+            var geometry, material, texture, mesh;
 
-            geometry = new THREE.CylinderGeometry(this.radius, this.radius, this.length );
+            geometry = new THREE.CylinderGeometry(this.smallRadius, this.radius, this.length, 16, 16 );
 
+            texture = THREE.ImageUtils.loadTexture("textures/light-wood-brown.jpg");
             material = new THREE.MeshLambertMaterial({
-                color: dr.colors.brown
+                color: dr.colors.brown,
+                map: texture
             });
 
             mesh = new THREE.Mesh(
@@ -45,22 +47,21 @@ define(function (){
                 material
             );
             mesh.rotation.z = 110 * Math.PI/180;
-            mesh.position.y = 13;
-
+            mesh.position.y = 0.28 * this.length;
 
             this.mesh = mesh;
 
-            this.whiteBall.addEventListener('stoppedMoving', this.whiteBallStoppedMoving.bind(this));
+            this.whiteBall.addEventListener('stoppedMoving', this._whiteBallStoppedMoving.bind(this));
 
             this._moveCue();
             this._initKeyboard();
         },
 
         shoot: function() {
-            var start, end, tween, tweenBack, cuePos, x, z;
+            var start, end, tween, cuePos, x, z;
             cuePos = this.mesh.position;
-            x = 2.5 * Math.cos( this.shootAngle * Math.PI / 180 );
-            z = 2.5 * Math.sin( this.shootAngle * Math.PI / 180 );
+            x = this.distanceFromWhiteBall * Math.cos( this.shootAngle * Math.PI / 180 );
+            z = this.distanceFromWhiteBall * Math.sin( this.shootAngle * Math.PI / 180 );
 
             start = { x : cuePos.x, y: cuePos.y, z: cuePos.z };
             end = { x : cuePos.x + x, y: cuePos.y, z: cuePos.z + z};
@@ -74,13 +75,6 @@ define(function (){
                     this._applyImpulseOnWhiteBall();
 
                 }.bind(this));
-//            tweenBack = new TWEEN.Tween(end)
-//                .to(start, 400)
-//                .onUpdate(function(){
-//                    cuePos.x = this.x;
-//                    cuePos.z = this.z;
-//                });
-//            tween.chain(tweenBack);
 
             tween.start();
         },
@@ -97,11 +91,10 @@ define(function (){
         },
 
         _moveCue: function() {
-            var x, z, start, end, tween, cue, angle, matrix, sign = 1;
+            var x, z, cue, angle;
             angle = (this.shootAngle + 180 > 360) ? this.shootAngle - 180 : this.shootAngle + 180;
 
             cue = this.mesh;
-
             cue.position.x = this.whiteBall.position.x;
             cue.position.z = this.whiteBall.position.z;
 
@@ -114,9 +107,13 @@ define(function (){
             cue.rotation.y = -angle * Math.PI/180;
         },
 
-        whiteBallStoppedMoving: function(event) {
+        _whiteBallStoppedMoving: function(event) {
             dr.scene.add(this.mesh);
             this._moveCue();
+        },
+
+        _forceController: function() {
+
         },
 
         _initKeyboard: function() {
@@ -124,13 +121,11 @@ define(function (){
                 var key = event.keyCode;
                 switch (key) {
                     case 37:    //left
-                        this.shootAngleBefore = this.shootAngle;
                         this.shootAngle--;
                         if(this.shootAngle <= 0) {
                             this.shootAngle = 359;
                         }
                         this._moveCue();
-                        console.log(this.shootAngle);
                         break;
                     case 38:    //up
                         if(this.shootPower >= 1 && this.shootPower < 100) {
@@ -139,13 +134,11 @@ define(function (){
                         console.log(this.shootPower);
                         break;
                     case 39:    //right
-                        this.shootAngleBefore = this.shootAngle;
                         this.shootAngle++;
                         if(this.shootAngle === 360) {
                             this.shootAngle = 0;
                         }
                         this._moveCue();
-                        console.log(this.shootAngle);
                         break;
                     case 40:    //down
                         if(this.shootPower > 1 && this.shootPower <= 100) {
@@ -154,7 +147,6 @@ define(function (){
                         console.log(this.shootPower);
                         break;
                     case 13:    //enter
-                        console.log('enter');
                         this.shoot();
                         break;
                     default:

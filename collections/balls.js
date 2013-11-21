@@ -5,7 +5,7 @@ define([
     var balls = {
         models: [],
 
-        amount: 6,
+        amount: 15,
         colors: ['#ffffff','#000000','#E31010'],
 
         positions: null,
@@ -20,8 +20,9 @@ define([
             this.positions = [
                     [0, 0],
                 [2*r,-r],[2*r,r],
-            [4*r,-2*r],[4*r,0],[4*r,2*r]
-
+            [4*r,-2*r],[4*r,0],[4*r,2*r],
+        [6*r,-3*r],[6*r,-r],[6*r,r],[6*r,3*r],
+    [8*r,-4*r],[8*r,-2*r],[8*r,0],[8*r,2*r],[8*r,4*r]
             ];
             this.positionWhite = [-4*r,0];
 
@@ -33,13 +34,12 @@ define([
             var i, ball;
 
             for(i = 0; i < this.amount; i++) {
-//                ball = Ball.create('#'+Math.floor(Math.random()*16777215).toString(16));
-                ball = Ball.create(this.colors[2]);
+                ball = Ball.create(i+1);
                 ball.position.x = this.positions[i][0];
                 ball.position.z = this.positions[i][1];
                 this.models.push(ball);
             }
-            ball = Ball.create('#ffffff');
+            ball = Ball.create(0);
             ball.position.x = this.positionWhite[0];
             ball.position.z = this.positionWhite[1];
             this.models.push(ball);

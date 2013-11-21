@@ -10,24 +10,37 @@ define(function (){
 
         mesh: null,
         materials: null,
+        textures: [],
 
         get: function() {
             return this.mesh;
         },
 
-        create: function(color) {
-            this._createCue(color);
+        create: function(ballNr) {
+            var i;
+            for(i = 1; i < 16; i++) {
+                this.textures.push(THREE.ImageUtils.loadTexture("textures/ball-"+ i +".jpg"));
+            }
+
+            this._createCue(ballNr);
             return this.mesh;
         },
 
-        _createCue: function(color) {
-            var geometry, material, mesh;
-            color = color || "#eeeeee";
+        _createCue: function(ballNr) {
+            var geometry, material, texture, mesh;
             geometry = new THREE.SphereGeometry(this.radius, this.widthSegments, this.heightSegments);
 
-            material = new THREE.MeshLambertMaterial({
-                color: color
-            });
+            if(ballNr === 0) {
+                texture = this.textures[0];
+                material = new THREE.MeshLambertMaterial({
+                    color: "#ffffff"
+                });
+            } else {
+                texture = this.textures[ballNr];
+                material = new THREE.MeshLambertMaterial({
+                    map: texture
+                });
+            }
 
             mesh = new Physijs.SphereMesh(
                 geometry,
@@ -36,7 +49,7 @@ define(function (){
                 ),
                 this.mass
             );
-            mesh.position.y += dr.objects.table.height + this.radius;
+            mesh.position.y += dr.models.table.height + this.radius;
             mesh.castShadow = true;
 
             this.mesh = mesh;

@@ -15,7 +15,7 @@ define([
         init: function() {
             var viewAngle, aspect, near, far;
 
-            viewAngle = 45;
+            viewAngle = 50;
             aspect = dr.config.scene.width / dr.config.scene.height;
             near = 0.1;
             far = 1000;

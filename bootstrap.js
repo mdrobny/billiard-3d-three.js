@@ -1,11 +1,11 @@
-/* global define, dr, THREE, Physijs */
+/* global define, dr, THREE, Physijs, TWEEN */
 define([
     'config/global',
     'scene',
     'camera'
 ], function (configGlobal, Scene, Camera) {
 
-    var renderer, scene, camera;
+    var renderer, scene, camera, JSONLoader;
 
     Physijs.scripts.worker = dr.config.localResources + 'libs/physijs_worker.js';
     Physijs.scripts.ammo = dr.config.localResources + 'ammo.js';
@@ -25,6 +25,8 @@ define([
 
         Camera.init();
         camera = Camera.get();
+
+
     };
 
     var render = function () {
@@ -35,8 +37,7 @@ define([
         TWEEN.update();
     };
 
-    dr.render = render;
-
+//    dr.render = render;
     init();
     render();
     scene.simulate();

@@ -20,6 +20,8 @@ define([
             this._setLights(scene);
 
 
+
+
             table = Table.create();
             scene.add(table);
 
@@ -27,18 +29,16 @@ define([
 
             whiteBall = _.last(balls);
             cue = Cue.create(whiteBall, Balls);
-
-//            whiteBall.add(cue);
             scene.add(cue)
 
             _.forEach(balls, function (ball) {
                 scene.add(ball);
                 ball.setDamping(0.4, 0.5);
             });
-
-            dr.whiteBall = whiteBall;
-
-            dr.cue = cue;
+//
+//            dr.whiteBall = whiteBall;
+//
+//            dr.cue = cue;
 
 
 

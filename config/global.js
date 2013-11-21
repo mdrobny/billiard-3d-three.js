@@ -14,12 +14,20 @@ define(function () {
     dr.config.scene.height = 800;
 
     /** objects **/
-    dr.objects = {};
+    dr.models = {};
 
-    dr.objects.table = {};
-    dr.objects.table.height = 0;
+    dr.models.table = {};
+    dr.models.table.length = 80;
+    dr.models.table.width = 40;
+    dr.models.table.baseHeight = 5.5;
+    dr.models.table.baizeHeight = 0.5;
+    dr.models.table.height = dr.models.table.baseHeight + dr.models.table.baizeHeight;
+
+    dr.models.ball = {};
+    dr.models.ball.radius = 2;
 
     dr.colors = {};
     dr.colors.brown = "#A85511";
+    dr.colors.green = "#387D25";
 
 });
