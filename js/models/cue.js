@@ -6,13 +6,18 @@ define(function (){
         length: 60,
         distanceFromWhiteBall: 3,
 
+        indicator: null,
+        indicatorRadius: 1,
+        indicatorLength: 15,
+
+
         mesh: null,
         materials: null,
 
         whiteBall: null,
 
         /** 0 - 100 **/
-        shootPower: 10,
+        shootPower: 50,
         /** 0 - 360**/
         shootAngle: 0,
 
@@ -27,6 +32,7 @@ define(function (){
             this.ballsObj = BallsObj;
 
             this._createCue();
+            this._powerIndicatorUpdate();
 
             return this.mesh;
         },
@@ -56,6 +62,27 @@ define(function (){
             this._moveCue();
             this._initKeyboard();
         },
+
+//        _createForceIndicator: function() {
+//            var geometry, material, mesh;
+//
+//            geometry = new THREE.CylinderGeometry(this.indicatorRadius, this.indicatorRadius, this.indicatorLength, 16, 16 );
+//
+//            material = new THREE.MeshBasicMaterial({
+////                color: dr.colors.blue
+//            });
+////            material.color.setRGB(dr.colors.blueRGB.r/255, dr.colors.blueRGB.g/255, dr.colors.blueRGB.b/255);
+//            material.color.setRGB(dr.colors.redRGB.r/255, dr.colors.redRGB.g/255, dr.colors.redRGB.b/255);
+//
+//            mesh = new THREE.Mesh(
+//                geometry,
+//                material
+//            );
+//            mesh.position.x += 4 * this.radius;
+//            mesh.position.y += this.length/4;
+//
+//            return mesh;
+//        },
 
         shoot: function() {
             var start, end, tween, cuePos, x, z;
@@ -112,8 +139,20 @@ define(function (){
             this._moveCue();
         },
 
-        _forceController: function() {
 
+        _powerIndicatorUpdate: function() {
+            var p, color, currentColor, currentRedValue;
+            if(this.shootPower === parseInt(dr.powerIndicatorValueElem.text(), 10)) {
+                return;
+            }
+            currentColor = dr.powerIndicatorElem.css('background-color');
+            currentRedValue = currentColor.slice(4,currentColor.indexOf(","));
+
+            p =  this.shootPower / 100;
+            color = "rgb("+ Math.round(p * dr.colors.redRGB.r) +","+ Math.round(0.5 * (255 - currentRedValue)) +",30)";
+
+            dr.powerIndicatorElem.css('background-color',color);
+            dr.powerIndicatorValueElem.text(this.shootPower);
         },
 
         _initKeyboard: function() {
@@ -131,7 +170,7 @@ define(function (){
                         if(this.shootPower >= 1 && this.shootPower < 100) {
                             this.shootPower++;
                         }
-                        console.log(this.shootPower);
+                        this._powerIndicatorUpdate();
                         break;
                     case 39:    //right
                         this.shootAngle++;
@@ -144,7 +183,7 @@ define(function (){
                         if(this.shootPower > 1 && this.shootPower <= 100) {
                             this.shootPower--;
                         }
-                        console.log(this.shootPower);
+                        this._powerIndicatorUpdate();
                         break;
                     case 13:    //enter
                         this.shoot();

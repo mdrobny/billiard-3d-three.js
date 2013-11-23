@@ -17,8 +17,8 @@ define([
 
             viewAngle = 50;
             aspect = dr.config.scene.width / dr.config.scene.height;
-            near = 0.1;
-            far = 1000;
+            near = 1;
+            far = 5000;
 
             this.camera = new THREE.PerspectiveCamera(viewAngle, aspect, near, far);
 

@@ -3,6 +3,8 @@ define(function () {
     dr = window.dr || {};
 
     dr.canvasElem = $('.content');
+    dr.powerIndicatorElem = $('.power-indicator');
+    dr.powerIndicatorValueElem = $('.power-indicator-value').find('span');
 
     dr.config = {};
 
@@ -10,8 +12,8 @@ define(function () {
 
     dr.config.scene = {};
 
-    dr.config.scene.width = 1024;
-    dr.config.scene.height = 800;
+    dr.config.scene.width = window.innerWidth -21 ;// 1024;
+    dr.config.scene.height = window.innerHeight - 21 ;//800;
 
     /** objects **/
     dr.models = {};
@@ -29,5 +31,9 @@ define(function () {
     dr.colors = {};
     dr.colors.brown = "#A85511";
     dr.colors.green = "#387D25";
+    dr.colors.blue = "#A6C8ED";
+    dr.colors.blueRGB = {r: 166, g: 200, b: 237};
+    dr.colors.red = "#FA3E0A";
+    dr.colors.redRGB = {r: 255, g: 0, b: 0};
 
 });

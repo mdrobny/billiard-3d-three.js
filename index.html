@@ -2,19 +2,30 @@
 <html>
 <head>
     <title>Billiard3d - project</title>
+    <link href="images/billiard-icon.ico" rel="icon" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
 </head>
 <body>
     <div class="content"></div>
+    <div class="side-bar">
+        <div class="power-indicator">
+            <div class="power-indicator-icon"></div>
+            <div class="power-indicator-value">Power <span>50</span>%</div>
+        </div>
+        <div class="steerage">
+            <div class="steerage-arrows"></div>
+        </div>
+    </div>
 
 
-    <script src="libs/jquery-2.0.3.min.js"></script>
-    <script src="libs/jquery.mousewheel.3.1.4.js"></script>
-    <script type="text/javascript" src="libs/lodash-2.2.1.min.js"></script>
-    <script type="text/javascript" src="libs/three.js"></script>
-    <!--<script type="text/javascript" src="libs/three-csg.js"></script>-->
-    <script type="text/javascript" src="libs/tween.js"></script>
-    <script type="text/javascript" src="libs/physi.js"></script>
+    <script src="js/libs/jquery-2.0.3.min.js"></script>
+    <script src="js/libs/jquery.mousewheel.3.1.4.js"></script>
+    <script type="text/javascript" src="js/libs/lodash-2.2.1.min.js"></script>
+    <script type="text/javascript" src="js/libs/three.js"></script>
+    <script type="text/javascript" src="js/libs/physi.js"></script>
+    <script type="text/javascript" src="js/libs/tween.js"></script>
+    <script type="text/javascript" src="js/libs/threex/threex.windowresize.js"></script>
 
-    <script data-main="bootstrap.js" src="libs/require-2.1.9.min.js"></script>
+    <script data-main="js/bootstrap.js" src="js/libs/require-2.1.9.min.js"></script>
 </body>
 </html>

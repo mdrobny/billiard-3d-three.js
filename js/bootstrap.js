@@ -1,4 +1,4 @@
-/* global define, dr, THREE, Physijs, TWEEN */
+/* global define, dr, THREE, THREEx, Physijs, TWEEN */
 define([
     'config/global',
     'scene',
@@ -7,17 +7,19 @@ define([
 
     var renderer, scene, camera, JSONLoader;
 
-    Physijs.scripts.worker = dr.config.localResources + 'libs/physijs_worker.js';
+    Physijs.scripts.worker = dr.config.localResources + 'js/libs/physijs_worker.js';
     Physijs.scripts.ammo = dr.config.localResources + 'ammo.js';
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(dr.config.scene.width, dr.config.scene.height);
+    dr.canvasElem.append(renderer.domElement);
+
     renderer.shadowMapEnabled = true;
     renderer.shadowMapSoft = true;
     renderer.shadowMapType = THREE.PCFShadowMap;
     renderer.shadowMapAutoUpdate = true;
 
-    dr.canvasElem.append(renderer.domElement);
+
 
     var init = function() {
         Scene.init();
@@ -26,7 +28,7 @@ define([
         Camera.init();
         camera = Camera.get();
 
-
+        THREEx.WindowResize(renderer, camera);
     };
 
     var render = function () {

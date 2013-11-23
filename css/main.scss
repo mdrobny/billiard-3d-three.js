@@ -1,0 +1,37 @@
+body {
+    margin: 0;
+    font: {
+        size: 16px;
+        family: Arial;
+    }
+}
+
+.content {
+    position: relative;
+    z-index: 5;
+}
+
+$powerIndicatorPadding: 20px;
+.power-indicator {
+    width: 7%;
+    height: 100px - $powerIndicatorPadding;
+    padding-top: $powerIndicatorPadding;
+    background: rgb(127, 63, 30);
+    position: absolute;
+    right: 2%; top: 5%;
+    z-index: 20;
+
+    font: {
+        size: 0.9em;
+    };
+
+    .power-indicator-value {
+        width: 100%;
+        height: 30px;
+        text-align: center;
+        font: {
+            size: 1.5em;
+            weight: bold;
+        };
+    }
+}

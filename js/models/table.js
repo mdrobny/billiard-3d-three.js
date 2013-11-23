@@ -125,9 +125,9 @@ define(function (){
                     geometry,
                     Physijs.createMaterial(
                         material, 0.95, 0.3
-                    ), 0
+                    ), 1
                 );
-                mesh.position.y = this.height/2 - 0.2;
+                mesh.position.y = this.height/2 + 15;
 //                mesh.rotation.set(90 * Math.PI/180, 90 * Math.PI/180, 0);
                 mesh.rotation.set(0, 90 * Math.PI/180, 0);
                 var s = 30;
