@@ -1,14 +1,16 @@
 /* global define, THREE, Physijs, dr, _ */
 define([
+    'models/sky',
+    'models/room',
     'models/table',
     'collections/balls',
     'models/cue'
-],function (Table, Balls, Cue) {
+],function (Sky, Room, Table, Balls, Cue) {
     var scene = {
         scene: null,
 
         init: function() {
-            var scene, table, balls, whiteBall, cue, cueFrame, cuePointConstraint;
+            var scene, sky, room, table, balls, whiteBall, cue;
 
             scene = new Physijs.Scene();
             scene.setGravity(new THREE.Vector3(0,-10,0));
@@ -19,8 +21,11 @@ define([
 
             this._setLights(scene);
 
+            sky = Sky.create();
+            scene.add(sky);
 
-
+            room = Room.create();
+            scene.add(room);
 
             table = Table.create();
             scene.add(table);
@@ -29,7 +34,7 @@ define([
 
             whiteBall = _.last(balls);
             cue = Cue.create(whiteBall, Balls);
-            scene.add(cue)
+            scene.add(cue);
 
             _.forEach(balls, function (ball) {
                 scene.add(ball);
@@ -70,26 +75,31 @@ define([
         },
 
         _setLights: function(scene) {
-            var light, light2;
-            light = new THREE.DirectionalLight("#ffffff", 1);
+            var light, light2, light3;
+            light = new THREE.DirectionalLight("#ffffff", 1.2);
             light.position.set(0,50,50);
             light.castShadow = true;
             light.shadowDarkness = 0.5;
             light.shadowCameraNear = 2;
 //            light.shadowCameraFar = 2;
-            light.shadowCameraLeft = -30;
-            light.shadowCameraRight = 30;
+            light.shadowCameraLeft = -40;
+            light.shadowCameraRight = 40;
             light.shadowCameraTop = 20;
             light.shadowCameraBottom = -20;
 
 //            light.shadowCameraVisible = true;
             scene.add(light);
 
-            light2 = new THREE.DirectionalLight("#ffffff", 0.4);
+            light2 = new THREE.DirectionalLight("#ffffff", 1.4);
             light2.position.set(0,50,-50);
             scene.add(light2);
 
-        },
+            light3 = new THREE.DirectionalLight( 0xffffff );
+            light3.position.set( -100, 150, 0 );
+            light3.target.position.set(100,-100,100);
+            scene.add( light3 );
+
+        }
 
 
 

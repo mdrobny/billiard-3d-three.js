@@ -22,11 +22,11 @@ define(function (){
                 this.textures.push(THREE.ImageUtils.loadTexture("textures/ball-"+ i +".jpg"));
             }
 
-            this._createCue(ballNr);
+            this._createBall(ballNr);
             return this.mesh;
         },
 
-        _createCue: function(ballNr) {
+        _createBall: function(ballNr) {
             var geometry, material, texture, mesh;
             geometry = new THREE.SphereGeometry(this.radius, this.widthSegments, this.heightSegments);
 

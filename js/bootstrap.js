@@ -19,7 +19,18 @@ define([
     renderer.shadowMapType = THREE.PCFShadowMap;
     renderer.shadowMapAutoUpdate = true;
 
+    /**
+     * loading textures
+     */
+    var loadTextures = function() {
+        var t, texture;
+        t = dr.textures;
 
+        texture = THREE.ImageUtils.loadTexture("textures/grey-dark-wood.jpg", {}, function () {
+            t.grayDarkWood = texture;
+        });
+
+    };
 
     var init = function() {
         Scene.init();
@@ -29,6 +40,9 @@ define([
         camera = Camera.get();
 
         THREEx.WindowResize(renderer, camera);
+
+
+        loadTextures();
     };
 
     var render = function () {
@@ -43,4 +57,6 @@ define([
     init();
     render();
     scene.simulate();
+
+
 });

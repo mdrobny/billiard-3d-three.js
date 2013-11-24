@@ -42,7 +42,7 @@ define(function (){
 
             geometry = new THREE.CylinderGeometry(this.smallRadius, this.radius, this.length, 16, 16 );
 
-            texture = THREE.ImageUtils.loadTexture("textures/light-wood-brown.jpg");
+            texture = THREE.ImageUtils.loadTexture("textures/brown-light-wood.jpg");
             material = new THREE.MeshLambertMaterial({
                 color: dr.colors.brown,
                 map: texture

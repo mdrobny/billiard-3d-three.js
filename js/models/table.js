@@ -34,7 +34,7 @@ define(function (){
             var geometry, material, texture, mesh, shape, path, tableBase, tableBaseBSP, i,
                 cylinderHole, cylinderHoleBSP, holes;
 
-            texture = THREE.ImageUtils.loadTexture("textures/light-wood-brown.jpg");
+            texture = THREE.ImageUtils.loadTexture("textures/brown-light-wood.jpg");
             material = new THREE.MeshLambertMaterial({
                 color: dr.colors.brown,
                 map: texture
@@ -106,37 +106,33 @@ define(function (){
             var geometry, material, texture, mesh;
             geometry = new THREE.CubeGeometry(this.length, this.width, this.baizeHeight);
 
-            texture = THREE.ImageUtils.loadTexture("textures/baize-light-green.jpg");
+            texture = THREE.ImageUtils.loadTexture("textures/green-light-baize.jpg");
             material = new THREE.MeshLambertMaterial({
                 color: dr.colors.green,
                 map: texture
             });
 
-            var JSONLoader = new THREE.JSONLoader();
-            var createTable = function( geometry, materials )
-            {
-//                var zmesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-//                zmesh.position.set( 0, 0, 0 );
-//                zmesh.scale.set( 30, 30, 30 );
-//                scene.add( zmesh );
-                material = new THREE.MeshFaceMaterial( materials );
-
-                mesh = new Physijs.Mesh(
-                    geometry,
-                    Physijs.createMaterial(
-                        material, 0.95, 0.3
-                    ), 1
-                );
-                mesh.position.y = this.height/2 + 15;
-//                mesh.rotation.set(90 * Math.PI/180, 90 * Math.PI/180, 0);
-                mesh.rotation.set(0, 90 * Math.PI/180, 0);
-                var s = 30;
-                mesh.scale.set( s,1,s );
-                mesh.receiveShadow = true;
-//                this.mesh.add(mesh)
-                dr.scene.add(mesh)
-//                return mesh;
-            };
+//            var JSONLoader = new THREE.JSONLoader();
+//            var createTable = function( geometry, materials )
+//            {
+//                material = new THREE.MeshFaceMaterial( materials );
+//
+//                mesh = new Physijs.Mesh(
+//                    geometry,
+//                    Physijs.createMaterial(
+//                        material, 0.95, 0.3
+//                    ), 1
+//                );
+//                mesh.position.y = this.height/2 + 15;
+////                mesh.rotation.set(90 * Math.PI/180, 90 * Math.PI/180, 0);
+//                mesh.rotation.set(0, 90 * Math.PI/180, 0);
+//                var s = 30;
+//                mesh.scale.set( s,1,s );
+//                mesh.receiveShadow = true;
+////                this.mesh.add(mesh)
+//                dr.scene.add(mesh)
+////                return mesh;
+//            };
 //            JSONLoader.load( "objects/baize.js", createTable.bind(this) );
 
             mesh = new Physijs.BoxMesh(
@@ -153,7 +149,7 @@ define(function (){
 
         _createTableSides: function() {
             var geometry, material, texture, sideMesh, mesh, sideLength, sideParts;
-            texture = THREE.ImageUtils.loadTexture("textures/baize-light-green.jpg");
+            texture = THREE.ImageUtils.loadTexture("textures/green-light-baize.jpg");
             material = new THREE.MeshLambertMaterial({
                 color: dr.colors.green,
                 map: texture

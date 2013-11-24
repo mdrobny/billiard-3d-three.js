@@ -12,8 +12,8 @@ define(function () {
 
     dr.config.scene = {};
 
-    dr.config.scene.width = window.innerWidth -21 ;// 1024;
-    dr.config.scene.height = window.innerHeight - 21 ;//800;
+    dr.config.scene.width = window.innerWidth -20 ;// 1024;
+    dr.config.scene.height = window.innerHeight - 20 ;//800;
 
     /** objects **/
     dr.models = {};
@@ -35,5 +35,8 @@ define(function () {
     dr.colors.blueRGB = {r: 166, g: 200, b: 237};
     dr.colors.red = "#FA3E0A";
     dr.colors.redRGB = {r: 255, g: 0, b: 0};
+
+    dr.objects = {};
+    dr.textures = {};
 
 });
