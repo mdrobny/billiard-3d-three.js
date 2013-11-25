@@ -13,7 +13,7 @@ define([
             var scene, sky, room, table, balls, whiteBall, cue;
 
             scene = new Physijs.Scene();
-            scene.setGravity(new THREE.Vector3(0,-10,0));
+            scene.setGravity(new THREE.Vector3(0,dr.config.scene.gravityY,0));
             scene.addEventListener('update', function() {
                 scene.simulate(undefined, 2);
             });
@@ -38,34 +38,11 @@ define([
 
             _.forEach(balls, function (ball) {
                 scene.add(ball);
-                ball.setDamping(0.4, 0.5);
+                ball.setDamping(Balls.dampingLinear, Balls.dampingAngular);
             });
 //
 //            dr.whiteBall = whiteBall;
-//
 //            dr.cue = cue;
-
-
-
-            /** coordinates system */
-//            var material = new THREE.MeshBasicMaterial({color: "#000"});
-//            var geometry = new THREE.Geometry();
-//            geometry.vertices.push(new THREE.Vector3(-100, 0, 0));
-//            geometry.vertices.push(new THREE.Vector3(100, 0, 0));
-//            var xAxis = new THREE.Line(geometry, material);
-//            scene.add(xAxis);
-//
-//            geometry = new THREE.Geometry();
-//            geometry.vertices.push(new THREE.Vector3(0, -100, 0));
-//            geometry.vertices.push(new THREE.Vector3(0, 100, 0));
-//            var yAxis = new THREE.Line(geometry, material);
-//            scene.add(yAxis);
-//
-//            geometry = new THREE.Geometry();
-//            geometry.vertices.push(new THREE.Vector3(0, 0, -100));
-//            geometry.vertices.push(new THREE.Vector3(0, 0, 100));
-//            var zAxis = new THREE.Line(geometry, material);
-//            scene.add(zAxis);
 
             this.scene = scene;
         },
@@ -96,7 +73,7 @@ define([
 
             light3 = new THREE.DirectionalLight( 0xffffff );
             light3.position.set( -100, 150, 0 );
-            light3.target.position.set(100,-100,100);
+            light3.target.position.set(-100,0,0);
             scene.add( light3 );
 
         }

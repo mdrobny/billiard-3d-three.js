@@ -14,6 +14,7 @@ define(function () {
 
     dr.config.scene.width = window.innerWidth -20 ;// 1024;
     dr.config.scene.height = window.innerHeight - 20 ;//800;
+    dr.config.scene.gravityY = -20;
 
     /** objects **/
     dr.models = {};
@@ -21,12 +22,13 @@ define(function () {
     dr.models.table = {};
     dr.models.table.length = 80;
     dr.models.table.width = 40;
-    dr.models.table.baseHeight = 5.5;
-    dr.models.table.baizeHeight = 0.5;
+    dr.models.table.baseHeight = 5;
+    dr.models.table.baizeHeight = 1;
     dr.models.table.height = dr.models.table.baseHeight + dr.models.table.baizeHeight;
 
     dr.models.ball = {};
     dr.models.ball.radius = 2;
+    dr.models.ball.isMovingIntervalTime = 100;
 
     dr.colors = {};
     dr.colors.brown = "#A85511";

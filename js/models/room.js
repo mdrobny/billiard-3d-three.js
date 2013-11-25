@@ -22,14 +22,14 @@ define(function (){
         _createFloor: function() {
             var geometry, material, texture, mesh;
             geometry = new THREE.CubeGeometry(this.length, this.width, 1);
-            texture = THREE.ImageUtils.loadTexture("textures/grey-dark-wood.jpg");
+            texture = dr.textures.grayDarkWood;
             material = new THREE.MeshLambertMaterial({
                 color: "#eeeeee",
                 map: texture
             });
             mesh = new Physijs.BoxMesh(
                 geometry,
-                new Physijs.createMaterial(material, 0.1, 0.1),
+                new Physijs.createMaterial(material, 0.1, 0.9),
                 0
             );
             mesh.rotation.x = Math.PI/2;

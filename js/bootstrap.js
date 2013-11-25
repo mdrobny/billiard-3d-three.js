@@ -23,26 +23,27 @@ define([
      * loading textures
      */
     var loadTextures = function() {
-        var t, texture;
+        var t, texture, texturesLoader;
         t = dr.textures;
+//        texturesLoader = new THREE.TextureLoader();
+//        texturesLoader.load("textures/green-light-baize.jpg", function () { console.log('loaded');}, null, function () { console.log('error');} );
 
-        texture = THREE.ImageUtils.loadTexture("textures/grey-dark-wood.jpg", {}, function () {
-            t.grayDarkWood = texture;
-        });
-
+        t.brownLightWood = THREE.ImageUtils.loadTexture("textures/brown-light-wood.jpg");
+        t.brownDarkWood = THREE.ImageUtils.loadTexture("textures/brown-dark-wood.jpg");
+        t.grayDarkWood = THREE.ImageUtils.loadTexture("textures/grey-dark-wood.jpg");
+        t.greenLightBaize = THREE.ImageUtils.loadTexture("textures/green-light-baize.jpg");
     };
 
     var init = function() {
-        Scene.init();
-        scene = Scene.get();
-
         Camera.init();
         camera = Camera.get();
 
         THREEx.WindowResize(renderer, camera);
 
-
         loadTextures();
+
+        Scene.init();
+        scene = Scene.get();
     };
 
     var render = function () {

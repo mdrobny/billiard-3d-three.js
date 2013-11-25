@@ -1,10 +1,10 @@
 /* global define, dr, THREE, Physijs */
 define(function (){
     var ball = {
-        radius: 2,
-        mass: 2,
-        friction: 0.2,
-        restitution: 0.3,
+        radius: 1.8,
+        mass: 3,
+        friction: 0.9,
+        restitution: 0.999,
         widthSegments: 32,
         heightSegments: 32,
 
@@ -31,12 +31,11 @@ define(function (){
             geometry = new THREE.SphereGeometry(this.radius, this.widthSegments, this.heightSegments);
 
             if(ballNr === 0) {
-                texture = this.textures[0];
                 material = new THREE.MeshLambertMaterial({
                     color: "#ffffff"
                 });
             } else {
-                texture = this.textures[ballNr];
+                texture = this.textures[ballNr - 1];
                 material = new THREE.MeshLambertMaterial({
                     map: texture
                 });

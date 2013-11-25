@@ -1,15 +1,12 @@
 /* global define, dr, THREE, TWEEN, Physijs */
-define(function (){
+define([
+    'collections/Balls'
+], function (Balls){
     var cue = {
         radius: 1,
         smallRadius: 0.4,
         length: 60,
         distanceFromWhiteBall: 3,
-
-        indicator: null,
-        indicatorRadius: 1,
-        indicatorLength: 15,
-
 
         mesh: null,
         materials: null,
@@ -18,6 +15,8 @@ define(function (){
 
         /** 0 - 100 **/
         shootPower: 50,
+        /** makes shot stronger **/
+        powerAmplification: 6,
         /** 0 - 360**/
         shootAngle: 0,
 
@@ -42,7 +41,7 @@ define(function (){
 
             geometry = new THREE.CylinderGeometry(this.smallRadius, this.radius, this.length, 16, 16 );
 
-            texture = THREE.ImageUtils.loadTexture("textures/brown-light-wood.jpg");
+            texture = dr.textures.brownLightWood;
             material = new THREE.MeshLambertMaterial({
                 color: dr.colors.brown,
                 map: texture
@@ -57,33 +56,17 @@ define(function (){
 
             this.mesh = mesh;
 
-            this.whiteBall.addEventListener('stoppedMoving', this._whiteBallStoppedMoving.bind(this));
+            this.whiteBall.addEventListener('ballStoppedMoving', this._whiteBallStoppedMoving.bind(this));
+            this.whiteBall.addEventListener('ballFalling', this._whiteBallFalling.bind(this));
 
             this._moveCue();
             this._initKeyboard();
         },
 
-//        _createForceIndicator: function() {
-//            var geometry, material, mesh;
-//
-//            geometry = new THREE.CylinderGeometry(this.indicatorRadius, this.indicatorRadius, this.indicatorLength, 16, 16 );
-//
-//            material = new THREE.MeshBasicMaterial({
-////                color: dr.colors.blue
-//            });
-////            material.color.setRGB(dr.colors.blueRGB.r/255, dr.colors.blueRGB.g/255, dr.colors.blueRGB.b/255);
-//            material.color.setRGB(dr.colors.redRGB.r/255, dr.colors.redRGB.g/255, dr.colors.redRGB.b/255);
-//
-//            mesh = new THREE.Mesh(
-//                geometry,
-//                material
-//            );
-//            mesh.position.x += 4 * this.radius;
-//            mesh.position.y += this.length/4;
-//
-//            return mesh;
-//        },
-
+        /**
+         * enter/space action
+         * calculate cue animation (by TWEEN) and invoke applyingImpulse on the white ball
+         */
         shoot: function() {
             var start, end, tween, cuePos, x, z;
             cuePos = this.mesh.position;
@@ -100,23 +83,30 @@ define(function (){
                 })
                 .onComplete(function (){
                     this._applyImpulseOnWhiteBall();
-
+                    dr.scene.remove(this.mesh);
                 }.bind(this));
 
             tween.start();
         },
 
+        /**
+         * perform shoot by applying impulse to the white ball
+         * @private
+         */
         _applyImpulseOnWhiteBall: function() {
             var x, z;
-            x = this.shootPower * Math.cos( this.shootAngle * Math.PI / 180 );
-            z = this.shootPower * Math.sin( this.shootAngle * Math.PI / 180 );
-
-            dr.scene.remove(this.mesh);
+            x = this.shootPower * Math.cos( this.shootAngle * Math.PI / 180 ) * this.powerAmplification;
+            z = this.shootPower * Math.sin( this.shootAngle * Math.PI / 180 ) * this.powerAmplification;
 
             this.whiteBall.applyCentralImpulse(new THREE.Vector3(x,0,z));
             this.ballsObj.isMoving(this.whiteBall);
         },
 
+        /**
+         * left/right arrow action
+         * move cue around the white ball by current angle
+         * @private
+         */
         _moveCue: function() {
             var x, z, cue, angle;
             angle = (this.shootAngle + 180 > 360) ? this.shootAngle - 180 : this.shootAngle + 180;
@@ -134,12 +124,36 @@ define(function (){
             cue.rotation.y = -angle * Math.PI/180;
         },
 
+        /**
+         * after white ball stopped moving add cue again to the scene
+         * @param event
+         * @private
+         */
         _whiteBallStoppedMoving: function(event) {
             dr.scene.add(this.mesh);
             this._moveCue();
         },
 
+        /**
+         * if white ball is out of table (falling down) remove it from the scene,
+         *      move to center and a little higher and add cue like in normal situation
+         * @param event
+         * @private
+         */
+        _whiteBallFalling: function(event) {
+            dr.scene.remove(this.whiteBall);
+            this.whiteBall.position.set(0, dr.models.table.height/2 + 3 * dr.models.ball.radius, 0);
+            dr.scene.add(this.whiteBall);
+            this.whiteBall.setDamping(Balls.dampingLinear, Balls.dampingAngular);
+            dr.scene.add(this.mesh);
+            this._moveCue();
+        },
 
+        /**
+         * display current shot power in indicator div element
+         * update it's color relatively to power value
+         * @private
+         */
         _powerIndicatorUpdate: function() {
             var p, color, currentColor, currentRedValue;
             if(this.shootPower === parseInt(dr.powerIndicatorValueElem.text(), 10)) {
@@ -155,9 +169,15 @@ define(function (){
             dr.powerIndicatorValueElem.text(this.shootPower);
         },
 
+        /**
+         * keyboard steering
+         * arrows
+         * enter/space
+         * @private
+         */
         _initKeyboard: function() {
             document.addEventListener('keydown', function (event) {
-                var key = event.keyCode;
+                var key = event.keyCode || event.charCode || event.which;
                 switch (key) {
                     case 37:    //left
                         this.shootAngle--;
@@ -186,6 +206,9 @@ define(function (){
                         this._powerIndicatorUpdate();
                         break;
                     case 13:    //enter
+                        this.shoot();
+                        break;
+                    case 32:    //space
                         this.shoot();
                         break;
                     default:

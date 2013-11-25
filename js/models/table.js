@@ -3,18 +3,24 @@ define(function (){
     var table = {
         length: dr.models.table.length,
         width: dr.models.table.width,
-        baseHeight: dr.models.table.baseHeight,
-        baizeHeight: dr.models.table.baizeHeight,
         height: dr.models.table.height,
+        gamePlaneHeight: dr.models.table.baseHeight/2 + dr.models.table.baizeHeight + 0.045,
+
+        baseHeight: dr.models.table.baseHeight,
+
+        baizeHeight: dr.models.table.baizeHeight,
+        baizeFriction: 0.95,
+        baizeRestitution: 0.1,
 
 
         sideHoleLength: 2.5 * dr.models.ball.radius,
         sideWidth: 3,
-        sideHeight: dr.models.ball.radius + 0.5,
-        sideFriction: 0.9,
-        sideRestitution: 0.6,
+        sideHeight: dr.models.ball.radius + 0.2,
+        sideFriction: 0.8,
+        sideRestitution: 0.8,
 
         mesh: null,
+        baizeMesh: null,
         materials: null,
 
         get: function() {
@@ -23,8 +29,7 @@ define(function (){
 
         create: function() {
             this.mesh = this._createTableBase();
-            this.mesh.add(this._createTableBaize());
-//            this._createTableBaize();
+            this.baizeMesh = this._createTableBaize();
             this._createTableSides();
 
             return this.mesh;
@@ -34,7 +39,7 @@ define(function (){
             var geometry, material, texture, mesh, shape, path, tableBase, tableBaseBSP, i,
                 cylinderHole, cylinderHoleBSP, holes;
 
-            texture = THREE.ImageUtils.loadTexture("textures/brown-light-wood.jpg");
+            texture = dr.textures.brownDarkWood;
             material = new THREE.MeshLambertMaterial({
                 color: dr.colors.brown,
                 map: texture
@@ -88,25 +93,24 @@ define(function (){
 
 
 
-            var mesh2 = new Physijs.ConvexMesh(
+            mesh = new Physijs.BoxMesh(
                 geometry,
 //                mesh.geometry,
                 Physijs.createMaterial(
-                    material,
-                    0.4,
-                    0.8
+                    material, 0.99,0
                 ),
                 0
             );
-            mesh2.rotation.x += 90 * Math.PI/180;
-            return mesh2;
+            mesh.rotation.x += Math.PI/2;
+            mesh.castShadow = true;
+            return mesh;
         },
 
         _createTableBaize: function() {
             var geometry, material, texture, mesh;
             geometry = new THREE.CubeGeometry(this.length, this.width, this.baizeHeight);
 
-            texture = THREE.ImageUtils.loadTexture("textures/green-light-baize.jpg");
+            texture = dr.textures.greenLightBaize;
             material = new THREE.MeshLambertMaterial({
                 color: dr.colors.green,
                 map: texture
@@ -138,87 +142,90 @@ define(function (){
             mesh = new Physijs.BoxMesh(
                 geometry,
                 Physijs.createMaterial(
-                    material, 0.95, 0.3
-                ), 1
+                    material,
+                    this.baizeFriction,
+                    this.baizeRestitution
+                ), 0
             );
-            mesh.position.z = -this.height/2;
+            mesh.rotation.x += Math.PI/2;
+            mesh.position.y = this.gamePlaneHeight - this.baizeHeight/2;
             mesh.receiveShadow = true;
 
-            return mesh;
+            dr.scene.add(mesh);
         },
 
         _createTableSides: function() {
-            var geometry, material, texture, sideMesh, mesh, sideLength, sideParts;
-            texture = THREE.ImageUtils.loadTexture("textures/green-light-baize.jpg");
+            var geometry, material, color, texture, sideMesh, sideLength, sideParts, createSideElement;
+
+            texture = dr.textures.greenLightBaize;
+            color = dr.colors.green;
             material = new THREE.MeshLambertMaterial({
-                color: dr.colors.green,
+                color: color,
                 map: texture
             });
 
-            mesh = this.mesh;
             sideParts = [];
             sideLength = this.length/2 - 2 * this.sideHoleLength;
-            geometry = new THREE.CubeGeometry(sideLength, this.sideWidth, this.sideHeight);
+            geometry = new THREE.CubeGeometry(sideLength, this.sideHeight, this.sideWidth);
+
+            createSideElement = function(geometry, material) {
+                return new Physijs.BoxMesh(
+                    geometry,
+                    Physijs.createMaterial(
+                        material,
+                        this.sideFriction,
+                        this.sideRestitution
+                    ), 100000
+                );
+            }.bind(this);
 
             //length side 1
-            sideMesh = this._createSideElement(geometry, material);
-            sideMesh.position.set(-sideLength/2 - this.sideHoleLength/2, -this.width/2, 0);
-//            sideMesh.position.z = - this.height/2 + this.sideHeight/2 + 5;
-//            mesh.add(sideMesh);
+            sideMesh = createSideElement(geometry, material);
+            sideMesh.position.set(-sideLength/2 - this.sideHoleLength/2, 0, this.width/2 - this.sideWidth/2);
             sideParts.push(sideMesh);
 
             //length side 2
-            sideMesh = this._createSideElement(geometry, material);
-            sideMesh.position.set(sideLength/2  + this.sideHoleLength/2, -this.width/2, 0);
-//            mesh.add(sideMesh);
+            material = new THREE.MeshLambertMaterial({ color: color, map: texture });
+            sideMesh = createSideElement(geometry, material);
+            sideMesh.position.set(-sideLength/2  - this.sideHoleLength/2, 0, -this.width/2 + this.sideWidth/2);
             sideParts.push(sideMesh);
-
-            //length side 3
-            sideMesh = this._createSideElement(geometry, material);
-            sideMesh.position.set(-sideLength/2 - this.sideHoleLength/2, this.width/2, 0);
-//            mesh.add(sideMesh);
+//
+//            //length side 3
+            material = new THREE.MeshLambertMaterial({ color: color, map: texture });
+            sideMesh = createSideElement(geometry, material);
+            sideMesh.position.set(sideLength/2 + this.sideHoleLength/2, 0, this.width/2 - this.sideWidth/2);
             sideParts.push(sideMesh);
-
-            //length side 4
-            sideMesh = this._createSideElement(geometry, material);
-            sideMesh.position.set(sideLength/2  + this.sideHoleLength/2, this.width/2, 0);
-//            mesh.add(sideMesh);
+//
+//            //length side 4
+            material = new THREE.MeshLambertMaterial({ color: color, map: texture });
+            sideMesh = createSideElement(geometry, material);
+            sideMesh.position.set(sideLength/2 + this.sideHoleLength/2, 0, -this.width/2 + this.sideWidth/2);
             sideParts.push(sideMesh);
-
+//
             sideLength = this.width/2 - 2 * this.sideHoleLength;
-            geometry = new THREE.CubeGeometry(this.width - 2 * this.sideHoleLength, this.sideWidth, this.sideHeight);
-
-            //width side 1
-            sideMesh = this._createSideElement(geometry, material);
-            sideMesh.position.set(- this.length/2, - sideLength/2 + this.sideHoleLength ,0);
-            sideMesh.rotation.z = 90 * Math.PI/180;
-//            mesh.add(sideMesh);
+            geometry = new THREE.CubeGeometry(this.width - 2 * this.sideHoleLength, this.sideHeight, this.sideWidth);
+//
+//            //width side 1
+            material = new THREE.MeshLambertMaterial({ color: color, map: texture });
+            sideMesh = createSideElement(geometry, material);
+            sideMesh.position.set(- this.length/2 + this.sideWidth/2, - sideLength/2 + this.sideHoleLength ,0);
+            sideMesh.rotation.y = Math.PI/2;
             sideParts.push(sideMesh);
-
-            //width side 1
-            sideMesh = this._createSideElement(geometry, material);
-            sideMesh.position.set(this.length/2, - sideLength/2 + this.sideHoleLength ,0);
-            sideMesh.rotation.z = 90 * Math.PI/180;
-//            mesh.add(sideMesh);
+//
+//            //width side 1
+            material = new THREE.MeshLambertMaterial({ color: color, map: texture });
+            sideMesh = createSideElement(geometry, material);
+            sideMesh.position.set(this.length/2 - this.sideWidth/2, - sideLength/2 + this.sideHoleLength ,0);
+            sideMesh.rotation.y = Math.PI/2;
             sideParts.push(sideMesh);
 
 
             _.each(sideParts, function (sideMesh) {
-                sideMesh.position.z = -this.height/2 - this.sideHeight/2;
-                mesh.add(sideMesh);
+                sideMesh.position.y = this.gamePlaneHeight + this.sideHeight/2;
+                dr.scene.add(sideMesh);
             }.bind(this));
-
-//            return mesh;
-        },
-
-        _createSideElement: function(geometry, material) {
-            return new Physijs.BoxMesh(
-                geometry,
-                Physijs.createMaterial(
-                    material, this.sideFriction, this.sideRestitution
-                ), 1
-            );
         }
+
     };
     return table;
 });
