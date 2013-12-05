@@ -1,7 +1,7 @@
 /* global define, dr, THREE, Physijs */
 define(function (){
     var ball = {
-        radius: 1.8,
+        radius: dr.models.ball.radius,
         mass: 3,
         friction: 0.9,
         restitution: 0.999,

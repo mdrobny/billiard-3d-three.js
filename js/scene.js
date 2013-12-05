@@ -29,6 +29,7 @@ define([
 
             table = Table.create();
             scene.add(table);
+            table.setDamping(Balls.dampingLinear, Balls.dampingAngular);
 
             balls = Balls.create();
 
@@ -52,29 +53,23 @@ define([
         },
 
         _setLights: function(scene) {
-            var light, light2, light3;
-            light = new THREE.DirectionalLight("#ffffff", 1.2);
-            light.position.set(0,50,50);
+            var light, light2;
+            light = new THREE.DirectionalLight("#ffffff", 2.8);
+            light.position.set(100,180,150);
             light.castShadow = true;
             light.shadowDarkness = 0.5;
-            light.shadowCameraNear = 2;
-//            light.shadowCameraFar = 2;
-            light.shadowCameraLeft = -40;
-            light.shadowCameraRight = 40;
-            light.shadowCameraTop = 20;
-            light.shadowCameraBottom = -20;
-
+            light.shadowCameraNear = 20;
+            light.shadowCameraFar = 2;
+            light.shadowCameraLeft = - dr.models.table.length/2;
+            light.shadowCameraRight = dr.models.table.length/2;
+            light.shadowCameraTop = dr.models.table.width/2;
+            light.shadowCameraBottom = -dr.models.table.width/2;
 //            light.shadowCameraVisible = true;
             scene.add(light);
 
-            light2 = new THREE.DirectionalLight("#ffffff", 1.4);
-            light2.position.set(0,50,-50);
+            light2 = new THREE.DirectionalLight("#ffffff", 1.0);
+            light2.position.set(-30,30,150);
             scene.add(light2);
-
-            light3 = new THREE.DirectionalLight( 0xffffff );
-            light3.position.set( -100, 150, 0 );
-            light3.target.position.set(-100,0,0);
-            scene.add( light3 );
 
         }
 

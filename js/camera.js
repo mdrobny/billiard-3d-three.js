@@ -49,8 +49,6 @@ define([
                     this.phi = Math.min( 180, Math.max( 0, this.phi ) );
 
                     this._setCameraPosition();
-
-                    //dr.render();
                 }
             }.bind(this));
 
@@ -64,9 +62,13 @@ define([
             dr.canvasElem.on('mousewheel', function (event, delta, deltaX, deltaY) {
                 event.preventDefault();
 
-                this.radius -= deltaY;
+                if(this.radius > 20 && this.radius < 120) {
+                    this.radius -= deltaY;
+                } else {
+                    this.radius += deltaY;
+                }
+
                 this._setCameraPosition();
-                //dr.render();
             }.bind(this));
 
         },

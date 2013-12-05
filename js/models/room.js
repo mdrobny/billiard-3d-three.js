@@ -16,6 +16,7 @@ define(function (){
         create: function() {
             this.mesh = this._createFloor();
             this._createRoom();
+            this._createPainting();
             return this.mesh;
         },
 
@@ -55,6 +56,22 @@ define(function (){
 
             };
             JSONLoader.load( "objects/walls2.js", create.bind(this) );
+        },
+
+        _createPainting: function() {
+            var geometry, material, texture, mesh;
+
+            geometry = new THREE.CubeGeometry(this.length/3, this.length/5, 0.1);
+
+            texture = dr.textures.painting;
+            material = new THREE.MeshLambertMaterial({
+                color: "#eeeeee",
+                map: texture
+            });
+            mesh = new THREE.Mesh(geometry, material);
+            mesh.rotation.x = -Math.PI/2;
+            mesh.position.set(-25,-this.length/2 + 1,-55);
+            this.mesh.add(mesh);
         }
 
     };

@@ -13,14 +13,13 @@ define(function (){
         baizeRestitution: 0.1,
 
 
-        sideHoleLength: 2.5 * dr.models.ball.radius,
+        sideHoleLength: 3.5 * dr.models.ball.radius,
         sideWidth: 3,
-        sideHeight: dr.models.ball.radius + 0.2,
+        sideHeight: dr.models.ball.radius + 0.5,
         sideFriction: 0.8,
         sideRestitution: 0.8,
 
         mesh: null,
-        baizeMesh: null,
         materials: null,
 
         get: function() {
@@ -29,7 +28,7 @@ define(function (){
 
         create: function() {
             this.mesh = this._createTableBase();
-            this.baizeMesh = this._createTableBaize();
+            this._createTableBaize();
             this._createTableSides();
 
             return this.mesh;
@@ -175,7 +174,7 @@ define(function (){
                         material,
                         this.sideFriction,
                         this.sideRestitution
-                    ), 100000
+                    ), 0
                 );
             }.bind(this);
 

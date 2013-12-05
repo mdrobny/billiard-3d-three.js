@@ -8,13 +8,11 @@ define(function () {
 
     dr.config = {};
 
-    dr.config.localResources = "";//"http://localhost/billiard3d_local_res/";
-
     dr.config.scene = {};
 
-    dr.config.scene.width = window.innerWidth -20 ;// 1024;
-    dr.config.scene.height = window.innerHeight - 20 ;//800;
-    dr.config.scene.gravityY = -20;
+    dr.config.scene.width = window.innerWidth;
+    dr.config.scene.height = window.innerHeight;
+    dr.config.scene.gravityY = -100;
 
     /** objects **/
     dr.models = {};
@@ -27,7 +25,7 @@ define(function () {
     dr.models.table.height = dr.models.table.baseHeight + dr.models.table.baizeHeight;
 
     dr.models.ball = {};
-    dr.models.ball.radius = 2;
+    dr.models.ball.radius = 1.5;
     dr.models.ball.isMovingIntervalTime = 100;
 
     dr.colors = {};
