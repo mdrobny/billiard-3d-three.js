@@ -10,4 +10,4 @@ Goal of the project is to create 3d symulation of a billiard game in WebGL techn
 * [requre.js](http://requirejs.org)
 
 #### How to run
-This application have to be run from a server (e.g localhost), because of web workers, textures loading etc.
+This application has to be run from a server (e.g localhost), because of web workers, textures loading etc.
